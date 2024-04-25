@@ -26,4 +26,44 @@ public class ApplyLabVo {
     private String message;
 
     private Date createTime;
+
+    /**
+     * 学期
+     */
+    private String semester;
+
+    /**
+     * 课名
+     */
+    private String scheduleName;
+
+    /**
+     * 实验室类型 0 软件，1 硬件，2 网络
+     */
+    private Integer labType;
+
+    /**
+     * 班级
+     */
+    private String classes;
+
+    /**
+     * 学生人数
+     */
+    private Long stuCount;
+
+    /**
+     * 起始周
+     */
+    private Integer beginWeeks;
+
+    /**
+     * 结束周
+     */
+    private Integer endWeeks;
+
+    /**
+     * 节次
+     */
+    private String section;
 }
