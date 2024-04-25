@@ -19,7 +19,11 @@ public enum ErrorEnum {
     SYSTEM_ERROR(10003, "系统出小差了，请稍后再试哦~~"),
 
     APPLY_Lab_NOT_EXIST(10004, "该申请单不存在或已被审核"),
-    PARAM_ERROR(10005, "参数错误");
+
+    PARAM_ERROR(10005, "参数错误"),
+
+    NOPOWER(10006, "权限不足")
+    ;
 
 
 
