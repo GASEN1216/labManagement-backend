@@ -10,4 +10,6 @@ public class RequestInfo {
     private Long userId;
 
     private String token;
+
+    private String semester;
 }

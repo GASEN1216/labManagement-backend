@@ -36,7 +36,7 @@ public class Schedule implements Serializable {
      * 学期
      */
     @TableField("semester_id")
-    private String semesterId;
+    private Long semesterId;
 
     /**
      * 节次
