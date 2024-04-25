@@ -1,12 +1,15 @@
 package com.foureve.labmanagementbackend.dao;
 
 import com.foureve.labmanagementbackend.Holder.RequestHolder;
+import com.foureve.labmanagementbackend.domain.dtos.ApplyEquDto;
 import com.foureve.labmanagementbackend.domain.dtos.ApplyLabDto;
 import com.foureve.labmanagementbackend.domain.dtos.UpdateApplyLabDto;
+import com.foureve.labmanagementbackend.domain.entity.ApplyEqu;
 import com.foureve.labmanagementbackend.domain.entity.ApplyLab;
 import com.foureve.labmanagementbackend.domain.entity.Semester;
 import com.foureve.labmanagementbackend.domain.entity.User;
 import com.foureve.labmanagementbackend.domain.entity.vo.ApplyLabVo;
+import com.foureve.labmanagementbackend.domain.enums.ApplyEquStateEnum;
 import com.foureve.labmanagementbackend.domain.enums.ApplyLabStateEnum;
 import com.foureve.labmanagementbackend.domain.enums.ApplyLabTypeEnum;
 import com.foureve.labmanagementbackend.domain.enums.ErrorEnum;
@@ -59,6 +62,7 @@ public class ApplyLabDao extends ServiceImpl<ApplyLabMapper, ApplyLab> {
             Semester semester = semesterDao.lambdaQuery().eq(Semester::getId, applyLab.getSemesterId()).one();
             String s = Objects.isNull(semester) ? "" : semester.getName();
             applyLabVo.setSemester(s);
+            applyLabVo.setId(applyLab.getId());
             applyLabVo.setScheduleName(applyLab.getScheduleName());
             applyLabVo.setLabType(applyLab.getLabType());
             applyLabVo.setClasses(applyLab.getClasses());
@@ -111,4 +115,6 @@ public class ApplyLabDao extends ServiceImpl<ApplyLabMapper, ApplyLab> {
         update.setMessage(applyLabDto.getMessage());
         updateById(update);
     }
+
+
 }

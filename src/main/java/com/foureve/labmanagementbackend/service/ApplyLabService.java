@@ -1,9 +1,11 @@
 package com.foureve.labmanagementbackend.service;
 
+import com.foureve.labmanagementbackend.domain.dtos.ApplyEquDto;
 import com.foureve.labmanagementbackend.domain.dtos.ApplyLabDto;
 import com.foureve.labmanagementbackend.domain.dtos.UpdateApplyLabDto;
 import com.foureve.labmanagementbackend.domain.entity.ApplyLab;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.foureve.labmanagementbackend.domain.entity.vo.ApplyEquVo;
 import com.foureve.labmanagementbackend.domain.entity.vo.ApplyLabVo;
 
 import java.util.List;
@@ -23,4 +25,5 @@ public interface ApplyLabService {
     void addApplyLabByTeacher(ApplyLabDto applyLabDto);
 
     void updateApplyLabByTeacher(UpdateApplyLabDto applyLabDto);
+
 }

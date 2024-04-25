@@ -17,6 +17,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApplyLabVo {
+    private Long id;
     private Long applicantId;
 
     private Long labNumber;
