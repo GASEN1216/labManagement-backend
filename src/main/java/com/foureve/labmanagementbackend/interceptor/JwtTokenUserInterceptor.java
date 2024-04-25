@@ -21,6 +21,12 @@ import java.util.Objects;
 public class JwtTokenUserInterceptor implements HandlerInterceptor {
 
     @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        RequestHolder.remove();
+        HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
+    }
+
+    @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = request.getHeader("token");
         if(Objects.isNull(token)) {
@@ -42,7 +48,7 @@ public class JwtTokenUserInterceptor implements HandlerInterceptor {
             if (claimsBody != null) {
                 userId = claimsBody.get("id");
             }
-            RequestHolder.set(new RequestInfo(Long.valueOf(userId.toString()), token));
+            RequestHolder.set(new RequestInfo(Long.valueOf(userId.toString()), token, null));
         }catch (Exception e){
             log.info("解析token失败："+e);
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
