@@ -12,5 +12,15 @@ public interface AdminService {
 
     ApiResult setSemester(SemesterDto semesterDto);
 
-    //ApiResult addTechnician(UserDto userDto);
+    ApiResult resetPassword(UserDto userDto, Integer code);
+
+    ApiResult addUser(UserDto userDto, Integer code);
+
+    ApiResult deleteUser(UserDto userDto, Integer code);
+
+    ApiResult updateUser(UserDto userDto, Integer code);
+
+    ApiResult listUser(Integer role);
+
+    ApiResult searchUser(String name, Integer role);
 }
