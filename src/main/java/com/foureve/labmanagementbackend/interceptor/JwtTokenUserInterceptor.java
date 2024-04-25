@@ -1,7 +1,9 @@
 package com.foureve.labmanagementbackend.interceptor;
 
 import com.foureve.labmanagementbackend.Holder.RequestHolder;
+import com.foureve.labmanagementbackend.domain.enums.ErrorEnum;
 import com.foureve.labmanagementbackend.domain.vo.req.RequestInfo;
+import com.foureve.labmanagementbackend.exception.BusinessException;
 import com.foureve.labmanagementbackend.utils.AppJwtUtil;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
@@ -45,8 +47,7 @@ public class JwtTokenUserInterceptor implements HandlerInterceptor {
             RequestHolder.set(new RequestInfo(Long.valueOf(userId.toString()), token));
         }catch (Exception e){
             log.info("解析token失败："+e);
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            return false;
+            throw new BusinessException(ErrorEnum.SYSTEM_ERROR,"解析token失败");
         }
         //6. 放行
         return true;

@@ -44,9 +44,9 @@ public class AssertUtil {
         }
     }
 
-    public static void isTrue(boolean expression, ErrorEnum errorEnum, Object... args) {
+    public static void isTrue(boolean expression, ErrorEnum errorEnum, String msg) {
         if (!expression) {
-            throwException(errorEnum, args);
+            throwException(errorEnum, msg);
         }
     }
 
@@ -58,23 +58,23 @@ public class AssertUtil {
     }
 
     //如果是true，则抛异常
-    public static void isFalse(boolean expression, ErrorEnum errorEnum, Object... args) {
+    public static void isFalse(boolean expression, ErrorEnum errorEnum, String msg) {
         if (expression) {
-            throwException(errorEnum, args);
+            throwException(errorEnum, msg);
         }
     }
 
     //如果不是非空对象，则抛异常
     public static void isNotEmpty(Object obj, String msg) {
         if (isEmpty(obj)) {
-            throwException(msg);
+            throw new BusinessException(ErrorEnum.SYSTEM_ERROR.getCode(), msg);
         }
     }
 
     //如果不是非空对象，则抛异常
-    public static void isNotEmpty(Object obj, ErrorEnum errorEnum, Object... args) {
+    public static void isNotEmpty(Object obj, ErrorEnum errorEnum, String msg) {
         if (isEmpty(obj)) {
-            throwException(errorEnum, args);
+            throwException(errorEnum, msg);
         }
     }
 
@@ -119,10 +119,10 @@ public class AssertUtil {
         throwException(null, msg);
     }
 
-    private static void throwException(ErrorEnum errorEnum, Object... arg) {
+    private static void throwException(ErrorEnum errorEnum, String msg) {
         if (Objects.isNull(errorEnum)) {
             errorEnum = ErrorEnum.SYSTEM_ERROR;
         }
-        throw new BusinessException(errorEnum.getCode(), MessageFormat.format(errorEnum.getMsg(), arg));
+        throw new BusinessException(errorEnum.getCode(), msg);
     }
 }

@@ -51,7 +51,7 @@ public class ApplyLab implements Serializable {
     private Long labNumber;
 
     /**
-     * 状态 0 未审核，1 已审核
+     * 状态 0 未排课，1 已排课，2 未审核，3 通过，4 驳回，5 使用完毕
      */
     @TableField("state")
     private Integer state;
@@ -59,8 +59,8 @@ public class ApplyLab implements Serializable {
     /**
      * 申请信息
      */
-    @TableField("massage")
-    private String massage;
+    @TableField("message")
+    private String message;
 
     /**
      * 逻辑删除

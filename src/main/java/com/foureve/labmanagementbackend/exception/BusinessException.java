@@ -23,7 +23,7 @@ public class BusinessException extends RuntimeException{
         }
 
         public BusinessException(ErrorEnum errorCode, String description) {
-            super(errorCode.getMsg());
+            super(description);
             this.code = errorCode.getCode();
             this.description = description;
         }

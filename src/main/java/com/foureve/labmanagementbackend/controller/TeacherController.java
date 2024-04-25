@@ -1,0 +1,43 @@
+package com.foureve.labmanagementbackend.controller;
+
+import com.foureve.labmanagementbackend.domain.dtos.ApplyLabDto;
+import com.foureve.labmanagementbackend.domain.dtos.UpdateApplyLabDto;
+import com.foureve.labmanagementbackend.domain.entity.ApplyLab;
+import com.foureve.labmanagementbackend.domain.vo.resp.ApiResult;
+import com.foureve.labmanagementbackend.service.ApplyLabService;
+import io.swagger.annotations.Api;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+
+/**
+ * 教师接口方法
+ * @author GASEN
+ * @date 2024/4/25 16:09
+ * @classType description
+ */
+@RestController
+@RequestMapping("/capi/teacher")
+@Api(tags = "教师相关接口")
+public class TeacherController {
+    @Resource
+    private ApplyLabService applyLabService;
+
+    @GetMapping("/apply/list")
+    public ApiResult getApplyLabList() {
+        return ApiResult.success(applyLabService.getApplyLabList());
+    }
+
+    @PostMapping("/apply/add")
+    public ApiResult addApplyLab(@RequestBody ApplyLabDto applyLabDto) {
+        applyLabService.addApplyLabByTeacher(applyLabDto);
+        return ApiResult.success();
+    }
+
+    @PutMapping("/apply/update")
+    public ApiResult updateApplyLab(@RequestBody UpdateApplyLabDto applyLabDto) {
+        applyLabService.updateApplyLabByTeacher(applyLabDto);
+        return ApiResult.success();
+    }
+
+}
