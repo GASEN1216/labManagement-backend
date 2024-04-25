@@ -16,4 +16,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserDao extends ServiceImpl<UserMapper, User> {
 
+    public User selectUser(String account) {
+        return lambdaQuery().eq(User::getAccount, account).one();
+    }
 }

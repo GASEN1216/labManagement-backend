@@ -1,16 +1,13 @@
 package com.foureve.labmanagementbackend.controller;
-import java.util.Date;
 
 
-import com.foureve.labmanagementbackend.dao.UserDao;
-import com.foureve.labmanagementbackend.domain.entity.User;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.annotation.Resource;
+import com.foureve.labmanagementbackend.domain.dtos.LoginDto;
+import com.foureve.labmanagementbackend.domain.vo.resp.ApiResult;
+import com.foureve.labmanagementbackend.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -22,25 +19,18 @@ import javax.annotation.Resource;
  */
 @RestController
 @RequestMapping("/capi/user")
+@Api(tags = "用户相关接口")
 public class UserController {
 
-    @Resource
-    private UserDao userDao;
-
-    @GetMapping
-    public Integer test() {
-        User user = new User();
-        user.setAccount(202125310207L);
-        user.setPassword("123456");
-        user.setName("gasen");
-        user.setRole(0);
-        user.setMajor("计算机");
-        user.setClasses("二班");
-        user.setSalt("123");
+    @Autowired
+    private UserService userService;
 
 
-        userDao.save(user);
-        return userDao.lambdaQuery().count();
+    @PostMapping("/login")
+    @ApiOperation("用户登录")
+    public ApiResult login(@RequestBody LoginDto loginDto){
+        return userService.login(loginDto);
     }
+
 }
 

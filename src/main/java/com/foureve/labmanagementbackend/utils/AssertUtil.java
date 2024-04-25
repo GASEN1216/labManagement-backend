@@ -78,6 +78,12 @@ public class AssertUtil {
         }
     }
 
+    public static void isNotEmpty(Object obj,Object obj2 , String msg) {
+        if (isEmpty(obj) && isEmpty(obj2)) {
+            throwException(msg);
+        }
+    }
+
     //如果不是非空对象，则抛异常
     public static void isEmpty(Object obj, String msg) {
         if (!isEmpty(obj)) {
