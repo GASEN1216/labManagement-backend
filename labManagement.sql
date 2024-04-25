@@ -1,4 +1,5 @@
-create database labmanagemet;
+create database labmanagement;
+
 
 create table apply_equ
 (
@@ -59,7 +60,7 @@ create table schedule
     section     varchar(255)                       not null comment '节次',
     lab_number  bigint                             not null comment '实验室编号',
     name        varchar(255)                       not null comment '课名',
-    class       varchar(255)                       not null comment '班级',
+    classes     varchar(255)                       not null comment '班级',
     teacher_id  bigint                             not null comment '任课教师',
     week        tinyint                            not null comment '星期',
     weeks       tinyint                            not null comment '周次',
@@ -68,8 +69,8 @@ create table schedule
     update_time datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间'
 );
 
-create index class
-    on schedule (class);
+create index schedule_classes_index
+    on schedule (classes);
 
 create index semester
     on schedule (semester);
@@ -84,13 +85,15 @@ create table user
     role        tinyint  default 1                 not null comment '角色 0 管理员，1 学生，2 教师，3 实验员',
     reputation  varchar(255)                       null comment ' 职称',
     major       varchar(255)                       null comment '专业',
-    class       varchar(255)                       null comment '班级',
+    classes     varchar(255)                       null comment '班级',
     is_delete   tinyint  default 0                 not null comment '逻辑删除',
     create_time datetime default CURRENT_TIMESTAMP not null comment '创建时间',
-    update_time datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间'
+    update_time datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    salt        varchar(255)                       null comment '盐值',
+    constraint user_pk
+        unique (account)
 );
 
-create index id_class
-    on user (id, class);
-
+create index user_id_classes_index
+    on user (id, classes);
 
