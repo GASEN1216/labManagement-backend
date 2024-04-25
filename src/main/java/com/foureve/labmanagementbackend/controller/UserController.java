@@ -25,6 +25,13 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @PostMapping("/test")
+    @ApiOperation("token登录测试")
+    public ApiResult test(){
+        return ApiResult.success("你你你你你你你你你你你你你你你你你你你");
+    }
+
+
 
     @PostMapping("/login")
     @ApiOperation("用户登录")

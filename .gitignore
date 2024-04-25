@@ -35,3 +35,4 @@ build/
 /src/main/resources/application-test.properties
 /src/main/resources/application-pro.properties
 /src/main/resources/application.yml
+/src/main/java/com/foureve/labmanagementbackend/constant/JwtSecretKey.java
