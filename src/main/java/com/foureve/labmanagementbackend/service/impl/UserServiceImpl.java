@@ -49,4 +49,10 @@ public class UserServiceImpl implements UserService {
         password = DigestUtils.md5DigestAsHex((password + salt).getBytes());
         AssertUtil.equal(password, user.getPassword(), "密码错误");
     }
+
+    public static void main(String[] args) {
+        String password = "123456";
+        String s = DigestUtils.md5DigestAsHex((password + 123456).getBytes());
+        System.out.println(s);
+    }
 }

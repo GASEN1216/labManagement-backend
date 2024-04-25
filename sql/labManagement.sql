@@ -1,6 +1,3 @@
-create database labmanagement;
-
-
 create table apply_equ
 (
     id            bigint auto_increment comment 'id'
@@ -26,8 +23,8 @@ create table apply_lab
     type         tinyint  default 0                 not null comment '申请人类别 0 学生， 1 教师',
     applicant_id bigint                             not null comment '申请人id',
     lab_number   bigint                             not null comment '实验室编号',
-    state        tinyint                            not null comment '状态 0 未审核，1 已审核',
-    massage      text                               null comment '申请信息',
+    state        tinyint                            not null comment '状态 0 未排课，1 已排课，2 未审核，3 通过，4 驳回，5 使用完毕',
+    message      text                               null comment '申请信息',
     is_delete    tinyint  default 0                 not null comment '逻辑删除',
     create_time  datetime default CURRENT_TIMESTAMP not null,
     update_time  datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP
@@ -56,7 +53,7 @@ create table schedule
 (
     id          bigint auto_increment comment '主键'
         primary key,
-    semester    varchar(255)                       not null comment '学期',
+    semester_id bigint                             not null comment '学期',
     section     varchar(255)                       not null comment '节次',
     lab_number  bigint                             not null comment '实验室编号',
     name        varchar(255)                       not null comment '课名',
@@ -72,8 +69,13 @@ create table schedule
 create index schedule_classes_index
     on schedule (classes);
 
-create index semester
-    on schedule (semester);
+create table semester
+(
+    id   bigint auto_increment
+        primary key,
+    name varchar(255) not null comment '学期名'
+)
+    comment '学期';
 
 create table user
 (
@@ -96,4 +98,5 @@ create table user
 
 create index user_id_classes_index
     on user (id, classes);
+
 
