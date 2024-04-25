@@ -1,5 +1,6 @@
 package com.foureve.labmanagementbackend.domain.enums;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -7,6 +8,7 @@ import lombok.Getter;
  * @date 2024/4/25 14:47
  * @classType description
  */
+@AllArgsConstructor
 @Getter
 public enum ErrorEnum {
 
@@ -24,10 +26,6 @@ public enum ErrorEnum {
     private String msg;
 
 
-    ErrorEnum(Integer code, String msg) {
-        this.code = code;
-        this.msg = msg;
-    }
 
 
 }
