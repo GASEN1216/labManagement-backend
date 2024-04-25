@@ -1,5 +1,7 @@
 package com.foureve.labmanagementbackend.service.adapter;
 
+import com.foureve.labmanagementbackend.dao.UserDao;
+import com.foureve.labmanagementbackend.domain.dtos.UserDto;
 import com.foureve.labmanagementbackend.domain.entity.User;
 import com.foureve.labmanagementbackend.domain.entity.vo.UserVo;
 import com.foureve.labmanagementbackend.domain.vo.resp.ApiResult;
@@ -20,4 +22,10 @@ public class UserAdapter {
         map.put("user", userVo);
         return ApiResult.success(map);
     }
+
+//    public static User newUser(UserDto userDto){
+//        User user = new User();
+//        BeanUtils.copyProperties(userDto, user);
+//        user.
+//    }
 }

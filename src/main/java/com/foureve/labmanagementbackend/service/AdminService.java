@@ -2,6 +2,7 @@ package com.foureve.labmanagementbackend.service;
 
 
 import com.foureve.labmanagementbackend.domain.dtos.SemesterDto;
+import com.foureve.labmanagementbackend.domain.dtos.UserDto;
 import com.foureve.labmanagementbackend.domain.vo.resp.ApiResult;
 
 public interface AdminService {
@@ -10,4 +11,6 @@ public interface AdminService {
     ApiResult addSemester(SemesterDto semesterDto);
 
     ApiResult setSemester(SemesterDto semesterDto);
+
+    //ApiResult addTechnician(UserDto userDto);
 }

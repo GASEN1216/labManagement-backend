@@ -2,6 +2,7 @@ package com.foureve.labmanagementbackend.controller;
 
 import com.foureve.labmanagementbackend.Holder.RequestHolder;
 import com.foureve.labmanagementbackend.domain.dtos.SemesterDto;
+import com.foureve.labmanagementbackend.domain.dtos.UserDto;
 import com.foureve.labmanagementbackend.domain.vo.resp.ApiResult;
 import com.foureve.labmanagementbackend.service.AdminService;
 import io.swagger.annotations.Api;

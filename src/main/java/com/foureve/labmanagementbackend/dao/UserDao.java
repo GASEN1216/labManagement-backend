@@ -1,5 +1,6 @@
 package com.foureve.labmanagementbackend.dao;
 
+import com.foureve.labmanagementbackend.domain.dtos.UserDto;
 import com.foureve.labmanagementbackend.domain.entity.User;
 import com.foureve.labmanagementbackend.mapper.UserMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -18,5 +19,9 @@ public class UserDao extends ServiceImpl<UserMapper, User> {
 
     public User selectUser(String account) {
         return lambdaQuery().eq(User::getAccount, account).one();
+    }
+
+    public User getByAccount(UserDto userDto) {
+        return lambdaQuery().eq(User::getAccount, userDto.getAccount()).one();
     }
 }

@@ -4,13 +4,17 @@ import com.foureve.labmanagementbackend.Holder.RequestHolder;
 import com.foureve.labmanagementbackend.dao.AdminDao;
 import com.foureve.labmanagementbackend.dao.ScheduleDao;
 import com.foureve.labmanagementbackend.dao.SemesterDao;
+import com.foureve.labmanagementbackend.dao.UserDao;
 import com.foureve.labmanagementbackend.domain.dtos.SemesterDto;
+import com.foureve.labmanagementbackend.domain.dtos.UserDto;
 import com.foureve.labmanagementbackend.domain.entity.Semester;
+import com.foureve.labmanagementbackend.domain.entity.User;
 import com.foureve.labmanagementbackend.domain.enums.ErrorEnum;
 import com.foureve.labmanagementbackend.domain.vo.req.RequestInfo;
 import com.foureve.labmanagementbackend.domain.vo.resp.ApiResult;
 import com.foureve.labmanagementbackend.service.AdminService;
 import com.foureve.labmanagementbackend.service.adapter.SemesterAdapter;
+import com.foureve.labmanagementbackend.service.adapter.UserAdapter;
 import com.foureve.labmanagementbackend.utils.AssertUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +36,9 @@ public class AdminServiceImpl implements AdminService {
 
     @Autowired
     private SemesterDao semesterDao;
+
+    @Autowired
+    private UserDao userDao;
 
 
     /**
@@ -89,6 +96,13 @@ public class AdminServiceImpl implements AdminService {
 
 
     }
+
+//    @Override
+//    public ApiResult addTechnician(UserDto userDto) {
+//        User user = userDao.getByAccount(userDto);
+//        AssertUtil.isEmpty(user, "用户已存在");
+//        user = UserAdapter.newUser(userDto);
+//    }
 
 
 }
