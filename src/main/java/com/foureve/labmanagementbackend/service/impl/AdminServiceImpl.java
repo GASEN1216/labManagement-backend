@@ -1,17 +1,15 @@
 package com.foureve.labmanagementbackend.service.impl;
 
 import com.foureve.labmanagementbackend.Holder.RequestHolder;
-import com.foureve.labmanagementbackend.dao.AdminDao;
-import com.foureve.labmanagementbackend.dao.ScheduleDao;
-import com.foureve.labmanagementbackend.dao.SemesterDao;
-import com.foureve.labmanagementbackend.dao.UserDao;
+import com.foureve.labmanagementbackend.cache.CourseCache;
+import com.foureve.labmanagementbackend.dao.*;
 import com.foureve.labmanagementbackend.domain.dtos.SemesterDto;
 import com.foureve.labmanagementbackend.domain.dtos.UserDto;
-import com.foureve.labmanagementbackend.domain.entity.Semester;
-import com.foureve.labmanagementbackend.domain.entity.User;
+import com.foureve.labmanagementbackend.domain.entity.*;
 import com.foureve.labmanagementbackend.domain.entity.vo.UserVo;
 import com.foureve.labmanagementbackend.domain.enums.ErrorEnum;
 import com.foureve.labmanagementbackend.domain.enums.RoleEnum;
+import com.foureve.labmanagementbackend.domain.enums.SectionEnum;
 import com.foureve.labmanagementbackend.domain.vo.req.RequestInfo;
 import com.foureve.labmanagementbackend.domain.vo.resp.ApiResult;
 import com.foureve.labmanagementbackend.service.AdminService;
@@ -22,7 +20,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -46,18 +47,21 @@ public class AdminServiceImpl implements AdminService {
 
     /**
      * 查询当前平台已有的学期
+     *
      * @return
      */
     @Override
-    public ApiResult listSemester() {;
+    public ApiResult listSemester() {
+        ;
         List<Semester> semesters = semesterDao.listSemester();
-        AssertUtil.isNotEmpty(semesters,"当前平台没有学期");
+        AssertUtil.isNotEmpty(semesters, "当前平台没有学期");
         List<String> list = semesters.stream().map(Semester::getName).distinct().collect(Collectors.toList());
         return ApiResult.success(list);
     }
 
     /**
      * 添加学期
+     *
      * @return
      */
     @Override
@@ -77,6 +81,7 @@ public class AdminServiceImpl implements AdminService {
 
     /**
      * 设置当前学期
+     *
      * @return
      */
     @Override
@@ -101,11 +106,12 @@ public class AdminServiceImpl implements AdminService {
 
     /**
      * 添加用户
+     *
      * @param userDto
      * @param role
      * @return
      */
-    public ApiResult addUser(UserDto userDto, Integer role){
+    public ApiResult addUser(UserDto userDto, Integer role) {
 
         NonUserAccount(userDto, "前端参数异常");
 
@@ -124,6 +130,7 @@ public class AdminServiceImpl implements AdminService {
 
     /**
      * 删除用户
+     *
      * @param userDto
      * @param role
      * @return
@@ -145,6 +152,7 @@ public class AdminServiceImpl implements AdminService {
 
     /**
      * 修改用户
+     *
      * @param userDto
      * @param role
      * @return
@@ -168,6 +176,7 @@ public class AdminServiceImpl implements AdminService {
 
     /**
      * 列出用户
+     *
      * @param role
      * @return
      */
@@ -179,6 +188,7 @@ public class AdminServiceImpl implements AdminService {
 
     /**
      * 根据角色和名字搜索用户
+     *
      * @param name
      * @param role
      * @return
@@ -194,8 +204,85 @@ public class AdminServiceImpl implements AdminService {
         return ApiResult.success(userVoList);
     }
 
+    @Resource
+    private ApplyLabDao applyLabDao;
+
+    @Resource
+    private CourseDao courseDao;
+
+    @Override
+    @Transactional
+    public ApiResult assignSchedule(Integer applyLabId) {
+        ApplyLab applyLab = applyLabDao.getById(applyLabId);
+        AssertUtil.isNotEmpty(applyLab, "没有找到对应的申请");
+
+        int[][][][] courseCache = CourseCache.courseCache;
+        int semesterId = applyLab.getSemesterId().intValue();
+        Integer beginWeeks = applyLab.getBeginWeeks()-1;
+        Integer endWeeks = applyLab.getEndWeeks()-1;
+
+
+        Schedule schedule = new Schedule();
+        schedule.setName(applyLab.getScheduleName());
+        schedule.setSemesterId((long) semesterId);
+        schedule.setClasses(applyLab.getClasses());
+        schedule.setTeacherId(applyLab.getApplicantId());
+
+        int weeks = 0;
+        int week = 0;
+        int section = 0;
+
+
+        for (int i = beginWeeks; i <= endWeeks; i++) {
+            int f = 0;
+            for (int j = 0; j < 7; j++) {
+                for (int k = 0; k < 6; k++) {
+                    if (courseCache[semesterId][i][j][k] == 0) {
+                        schedule.setWeeks(i+1);
+                        schedule.setWeek(j+1);
+                        schedule.setSection(SectionEnum.getSectionByCode(k+1));
+                        courseDao.save(Course.builder().semesterId((long) semesterId).weeks(i+1).week(j+1).section(SectionEnum.getSectionByCode(k+1)).build());
+                        courseCache[semesterId][i][j][k] = 1;
+                        weeks = i;
+                        week = j;
+                        section = k;
+                        f = 1;
+                        break;
+                    }
+                }
+                if (f == 1) break;
+            }
+            if (f == 1) break;
+        }
+
+
+        List<Schedule> scheduleList = new ArrayList<>();
+
+        List<Lab> labList = labDao.selectSuitableLabByLabApply(applyLab, weeks, week, section);
+        if (labList.size() == 0) {
+            return ApiResult.fail(ErrorEnum.SYSTEM_ERROR.getCode(), "没有找到合适的实验室");
+        }
+        if (labList.size() == 1) {
+            schedule.setLabNumber(labList.get(0).getNumber());
+            scheduleDao.save(schedule);
+            return ApiResult.success(schedule);
+        }
+        for (int i = 0; i < labList.size(); i++) {
+            Schedule s = new Schedule();
+            BeanUtils.copyProperties(schedule, s);
+            s.setLabNumber(labList.get(i).getNumber());
+            scheduleList.add(s);
+        }
+        scheduleDao.saveBatch(scheduleList);
+        applyLab.setState(1);
+        applyLabDao.updateById(applyLab);
+        return ApiResult.success(scheduleList);
+    }
+
+
     /**
      * 重置密码
+     *
      * @param userDto
      * @param role
      * @return
@@ -215,8 +302,12 @@ public class AdminServiceImpl implements AdminService {
         return ApiResult.success();
     }
 
+    @Autowired
+    private LabDao labDao;
+
+
     private static void NonUserAccount(UserDto userDto, String msg) {
-        if (userDto.getAccount() == null){
+        if (userDto.getAccount() == null) {
             AssertUtil.isTrue(false, ErrorEnum.SYSTEM_ERROR, msg);
         }
     }

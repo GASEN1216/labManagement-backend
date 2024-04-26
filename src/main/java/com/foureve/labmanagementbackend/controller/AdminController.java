@@ -2,6 +2,7 @@ package com.foureve.labmanagementbackend.controller;
 
 import com.foureve.labmanagementbackend.Holder.RequestHolder;
 import com.foureve.labmanagementbackend.dao.UserDao;
+import com.foureve.labmanagementbackend.domain.dtos.ApplyLabDto;
 import com.foureve.labmanagementbackend.domain.dtos.SemesterDto;
 import com.foureve.labmanagementbackend.domain.dtos.UserDto;
 import com.foureve.labmanagementbackend.domain.entity.User;
@@ -227,6 +228,19 @@ public class AdminController {
     public ApiResult searchUser(@RequestParam(value = "name", required = false) String name,
                                 @RequestParam(value = "role", required = false) Integer role) {
         return adminService.searchUser(name, role);
+    }
+
+    /**
+     * 将实验课安排到实验室
+     */
+    @PostMapping("/assign_lab/{id}")
+    @ApiOperation("将实验课安排到实验室")
+    public ApiResult assignSchedule(@PathVariable("id") Integer ApplyLabId) {
+        ApiResult noneAuthorizer = getNoneAuthorizer();
+        if (noneAuthorizer != null){
+            return noneAuthorizer;
+        }
+        return adminService.assignSchedule(ApplyLabId);
     }
 
 

@@ -20,8 +20,8 @@ import java.util.Objects;
  * @date 2024/4/26 0:24
  * @classType description
  */
-@Component
 @Slf4j
+@Component
 public class TeacherRoleInterceptor implements HandlerInterceptor {
     @Resource
     private UserDao userDao;

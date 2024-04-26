@@ -22,8 +22,9 @@ public enum ErrorEnum {
 
     PARAM_ERROR(10005, "参数错误"),
 
-    NOPOWER(10006, "权限不足")
-    ;
+    NOPOWER(10006, "权限不足"),
+
+    NO_LAB_AVAILABLE(10007, "没有可用的实验室");
 
 
 

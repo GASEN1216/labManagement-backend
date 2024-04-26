@@ -77,7 +77,7 @@ public class ApplyLabDao extends ServiceImpl<ApplyLabMapper, ApplyLab> {
     public void addApplyLabByTeacher(ApplyLabDto applyLabDto) {
         Long userId = RequestHolder.get().getUserId();
         ApplyLab applyLab = new ApplyLab();
-        applyLab.setLabNumber(applyLabDto.getLabNumber());
+        applyLab.setLabNumber(0L);
         applyLab.setApplicantId(userId);
         applyLab.setMessage(applyLabDto.getMessage());
         applyLab.setType(ApplyLabTypeEnum.TEACHER.getCode());

@@ -23,4 +23,7 @@ public interface AdminService {
     ApiResult listUser(Integer role);
 
     ApiResult searchUser(String name, Integer role);
+
+
+    ApiResult assignSchedule(Integer applyLabId);
 }
