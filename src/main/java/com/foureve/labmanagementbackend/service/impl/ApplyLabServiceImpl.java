@@ -1,11 +1,14 @@
 package com.foureve.labmanagementbackend.service.impl;
 
 import com.foureve.labmanagementbackend.Holder.RequestHolder;
+import com.foureve.labmanagementbackend.dao.ApplyEquDao;
 import com.foureve.labmanagementbackend.dao.ApplyLabDao;
 import com.foureve.labmanagementbackend.dao.UserDao;
+import com.foureve.labmanagementbackend.domain.dtos.ApplyEquDto;
 import com.foureve.labmanagementbackend.domain.dtos.ApplyLabDto;
 import com.foureve.labmanagementbackend.domain.dtos.UpdateApplyLabDto;
 import com.foureve.labmanagementbackend.domain.entity.ApplyLab;
+import com.foureve.labmanagementbackend.domain.entity.vo.ApplyEquVo;
 import com.foureve.labmanagementbackend.domain.entity.vo.ApplyLabVo;
 import com.foureve.labmanagementbackend.service.ApplyLabService;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,8 @@ public class ApplyLabServiceImpl implements ApplyLabService {
     @Resource
     private ApplyLabDao applyLabDao;
 
+
+
     @Override
     public List<ApplyLabVo> getApplyLabList() {
         Long userId = RequestHolder.get().getUserId();
@@ -39,4 +44,8 @@ public class ApplyLabServiceImpl implements ApplyLabService {
     public void updateApplyLabByTeacher(UpdateApplyLabDto applyLabDto) {
         applyLabDao.updateApplyLabByTeacher(applyLabDto);
     }
+
+
+
+
 }

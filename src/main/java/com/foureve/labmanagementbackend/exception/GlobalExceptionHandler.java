@@ -17,13 +17,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
     public ApiResult businessExceptionHandler(BusinessException e) {
-        log.error("事务异常:"+e.getMessage()+e);
+        log.error("事务异常:"+e.getMessage(), e);
         return ApiResult.fail(e.getCode(),e.getDescription());
     }
 
     @ExceptionHandler(RuntimeException.class)
     public ApiResult RuntimeExceptionHandler(RuntimeException e) {
-        log.error("运行时异常:"+e.getMessage()+e);
+        log.error("运行时异常:", e);
         return ApiResult.fail(ErrorEnum.SYSTEM_ERROR.getCode(),ErrorEnum.SYSTEM_ERROR.getMsg());
     }
 }

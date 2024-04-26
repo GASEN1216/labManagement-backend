@@ -1,9 +1,11 @@
 package com.foureve.labmanagementbackend.controller;
 
+import com.foureve.labmanagementbackend.domain.dtos.ApplyEquDto;
 import com.foureve.labmanagementbackend.domain.dtos.ApplyLabDto;
 import com.foureve.labmanagementbackend.domain.dtos.UpdateApplyLabDto;
 import com.foureve.labmanagementbackend.domain.entity.ApplyLab;
 import com.foureve.labmanagementbackend.domain.vo.resp.ApiResult;
+import com.foureve.labmanagementbackend.service.ApplyEquService;
 import com.foureve.labmanagementbackend.service.ApplyLabService;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
@@ -22,22 +24,37 @@ import javax.annotation.Resource;
 public class TeacherController {
     @Resource
     private ApplyLabService applyLabService;
+    @Resource
+    private ApplyEquService applyEquService;
 
-    @GetMapping("/apply/list")
+    @GetMapping("/applyLab/list")
     public ApiResult getApplyLabList() {
         return ApiResult.success(applyLabService.getApplyLabList());
     }
 
-    @PostMapping("/apply/add")
+    @PostMapping("/applyLab/add")
     public ApiResult addApplyLab(@RequestBody ApplyLabDto applyLabDto) {
         applyLabService.addApplyLabByTeacher(applyLabDto);
         return ApiResult.success();
     }
 
-    @PutMapping("/apply/update")
+    @PutMapping("/applyLab/update")
     public ApiResult updateApplyLab(@RequestBody UpdateApplyLabDto applyLabDto) {
         applyLabService.updateApplyLabByTeacher(applyLabDto);
         return ApiResult.success();
     }
+
+    @GetMapping("/applyEqu/list")
+    public ApiResult getApplyEquList() {
+        return ApiResult.success(applyEquService.getApplyEquList());
+    }
+
+    @PostMapping("/applyEqu/add")
+    public ApiResult addApplyLab(@RequestBody ApplyEquDto applyEquDto) {
+        applyEquService.addApplyEquByTeacher(applyEquDto);
+        return ApiResult.success();
+    }
+
+
 
 }

@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.foureve.labmanagementbackend.domain.entity.vo.ApplyEquVo;
+import com.foureve.labmanagementbackend.domain.entity.vo.ApplyLabVo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -72,4 +74,15 @@ public class ApplyEqu implements Serializable {
     private Date updateTime;
 
 
+    public ApplyEquVo toApplyEquVo() {
+        ApplyEquVo applyEquVo = new ApplyEquVo();
+        applyEquVo.setId(this.id);
+        applyEquVo.setState(this.state);
+        applyEquVo.setApplicantId(this.applicantId);
+        applyEquVo.setLabNumber(this.labNumber);
+        applyEquVo.setErrorMessage(this.errorMessage);
+        applyEquVo.setFixedMessage(this.fixedMessage);
+        applyEquVo.setCreateTime(this.createTime);
+        return applyEquVo;
+    }
 }

@@ -35,7 +35,7 @@ public class MPGenerator {
         GlobalConfig globalConfig = new GlobalConfig();
         globalConfig.setOpen(false);
         //todo 要改输出路径
-        globalConfig.setOutputDir(System.getProperty("user.dir") + "\\src\\main\\java");
+        globalConfig.setOutputDir(System.getProperty("user.dir") + "\\example\\src\\main\\java");
         //设置作者名字
         globalConfig.setAuthor("<a href=\"https://github.com/gasen1216\">gasen</a>");
         //去掉service的I前缀,一般只需要设置service就行
@@ -63,11 +63,7 @@ public class MPGenerator {
         strategyConfig.setEntityTableFieldAnnotationEnable(true);
         //todo 这里修改需要自动生成的表结构
         strategyConfig.setInclude(
-                "user",
-                "schedule",
-                "lab",
-                "apply_lab",
-                "apply_equ"
+                "semester"
         );
         //自动填充字段,在项目开发过程中,例如创建时间，修改时间,每次，都需要我们来指定，太麻烦了,设置为自动填充规则，就不需要我们赋值咯
         List<TableFill> list = new ArrayList<TableFill>();
@@ -88,6 +84,6 @@ public class MPGenerator {
         dataSourceConfig.setDriverName("com.mysql.cj.jdbc.Driver");
         dataSourceConfig.setUsername("root");
         dataSourceConfig.setPassword("root");
-        dataSourceConfig.setUrl("jdbc:mysql://localhost:3306/labmanagemet?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC");
+        dataSourceConfig.setUrl("jdbc:mysql://localhost:3306/labmanagement?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC");
     }
 }

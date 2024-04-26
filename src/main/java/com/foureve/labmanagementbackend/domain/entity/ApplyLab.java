@@ -63,6 +63,54 @@ public class ApplyLab implements Serializable {
     private String message;
 
     /**
+     * 学期
+     */
+    @TableField("semester_id")
+    private Long semesterId;
+
+    /**
+     * 课名
+     */
+    @TableField("schedule_name")
+    private String scheduleName;
+
+    /**
+     * 实验室类型 0 软件，1 硬件，2 网络
+     */
+    @TableField("lab_type")
+    private Integer labType;
+
+    /**
+     * 班级
+     */
+    @TableField("classes")
+    private String classes;
+
+    /**
+     * 学生人数
+     */
+    @TableField("stu_count")
+    private Long stuCount;
+
+    /**
+     * 起始周
+     */
+    @TableField("begin_weeks")
+    private Integer beginWeeks;
+
+    /**
+     * 结束周
+     */
+    @TableField("end_weeks")
+    private Integer endWeeks;
+
+    /**
+     * 节次
+     */
+    @TableField("section")
+    private String section;
+
+    /**
      * 逻辑删除
      */
     @TableField("is_delete")

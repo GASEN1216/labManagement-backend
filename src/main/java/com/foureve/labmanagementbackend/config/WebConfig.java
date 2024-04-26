@@ -1,6 +1,6 @@
 package com.foureve.labmanagementbackend.config;
 
-import com.foureve.labmanagementbackend.interceptor.JwtTokenUserInterceptor;
+import com.foureve.labmanagementbackend.interceptor.*;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -22,6 +22,18 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(new JwtTokenUserInterceptor())
                 .addPathPatterns("/capi/**")
                 .excludePathPatterns("/capi/user/login");
+        //教师身份拦截器
+        registry.addInterceptor(new TeacherRoleInterceptor())
+                .addPathPatterns("/capi/teacher/**");
+        //学生身份拦截器
+        registry.addInterceptor(new StudentRoleInterceptor())
+                .addPathPatterns("/capi/student/**");
+        //实验员身份拦截器
+        registry.addInterceptor(new LabMemberRoleInterceptor())
+                .addPathPatterns("/capi/labMember/**");
+        //管理员身份拦截器
+        registry.addInterceptor(new AdminRoleInterceptor())
+                .addPathPatterns("/capi/admin/**");
     }
 
 }
