@@ -2,7 +2,6 @@ package com.foureve.labmanagementbackend.controller;
 
 import com.foureve.labmanagementbackend.Holder.RequestHolder;
 import com.foureve.labmanagementbackend.dao.UserDao;
-import com.foureve.labmanagementbackend.domain.dtos.ApplyLabDto;
 import com.foureve.labmanagementbackend.domain.dtos.SemesterDto;
 import com.foureve.labmanagementbackend.domain.dtos.UserDto;
 import com.foureve.labmanagementbackend.domain.entity.User;

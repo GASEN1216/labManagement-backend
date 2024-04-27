@@ -1,13 +1,13 @@
 package com.foureve.labmanagementbackend.controller;
 
 import com.foureve.labmanagementbackend.domain.dtos.ApplyEquDto;
-import com.foureve.labmanagementbackend.domain.dtos.ApplyLabDto;
+import com.foureve.labmanagementbackend.domain.dtos.TeaApplyLabDto;
 import com.foureve.labmanagementbackend.domain.dtos.UpdateApplyLabDto;
-import com.foureve.labmanagementbackend.domain.entity.ApplyLab;
 import com.foureve.labmanagementbackend.domain.vo.resp.ApiResult;
 import com.foureve.labmanagementbackend.service.ApplyEquService;
 import com.foureve.labmanagementbackend.service.ApplyLabService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -28,29 +28,34 @@ public class TeacherController {
     private ApplyEquService applyEquService;
 
     @GetMapping("/applyLab/list")
+    @ApiOperation("教师所有申请表列表")
     public ApiResult getApplyLabList() {
         return ApiResult.success(applyLabService.getApplyLabList());
     }
 
     @PostMapping("/applyLab/add")
-    public ApiResult addApplyLab(@RequestBody ApplyLabDto applyLabDto) {
+    @ApiOperation("添加申请表")
+    public ApiResult addApplyLab(@RequestBody TeaApplyLabDto applyLabDto) {
         applyLabService.addApplyLabByTeacher(applyLabDto);
         return ApiResult.success();
     }
 
     @PutMapping("/applyLab/update")
+    @ApiOperation("更改未审核的申请表")
     public ApiResult updateApplyLab(@RequestBody UpdateApplyLabDto applyLabDto) {
         applyLabService.updateApplyLabByTeacher(applyLabDto);
         return ApiResult.success();
     }
 
     @GetMapping("/applyEqu/list")
+    @ApiOperation("教师所有的维修表列表")
     public ApiResult getApplyEquList() {
         return ApiResult.success(applyEquService.getApplyEquList());
     }
 
     @PostMapping("/applyEqu/add")
-    public ApiResult addApplyLab(@RequestBody ApplyEquDto applyEquDto) {
+    @ApiOperation("添加维修表")
+    public ApiResult addApplyEqu(@RequestBody ApplyEquDto applyEquDto) {
         applyEquService.addApplyEquByTeacher(applyEquDto);
         return ApiResult.success();
     }

@@ -122,4 +122,8 @@ public class LabDao extends ServiceImpl<LabMapper, Lab> {
 
 
     }
+
+    public List<Long> getLabNumberByLabMemberId(Long labmemberId) {
+        return lambdaQuery().eq(Lab::getAdminId, labmemberId).list().stream().map(Lab::getNumber).collect(Collectors.toList());
+    }
 }

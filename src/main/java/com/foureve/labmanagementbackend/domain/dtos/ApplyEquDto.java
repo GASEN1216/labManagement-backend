@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -21,16 +22,11 @@ import java.util.Date;
 @Data
 public class ApplyEquDto{
 
-    /**
-     * 实验室编号
-     */
-    @TableField("lab_number")
+
+    @ApiModelProperty(value = "实验室编号", required = true)
     private Long labNumber;
 
-    /**
-     * 维修信息
-     */
-    @TableField("error_message")
+    @ApiModelProperty(value = "维修信息", required = true)
     private String errorMessage;
 
 

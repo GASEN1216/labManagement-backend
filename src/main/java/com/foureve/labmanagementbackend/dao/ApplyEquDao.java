@@ -2,6 +2,7 @@ package com.foureve.labmanagementbackend.dao;
 
 import com.foureve.labmanagementbackend.Holder.RequestHolder;
 import com.foureve.labmanagementbackend.domain.dtos.ApplyEquDto;
+import com.foureve.labmanagementbackend.domain.dtos.FixedEquDto;
 import com.foureve.labmanagementbackend.domain.entity.ApplyEqu;
 import com.foureve.labmanagementbackend.domain.entity.ApplyLab;
 import com.foureve.labmanagementbackend.domain.entity.vo.ApplyEquVo;
@@ -42,5 +43,22 @@ public class ApplyEquDao extends ServiceImpl<ApplyEquMapper, ApplyEqu> {
         applyEqu.setErrorMessage(applyEquDto.getErrorMessage());
         applyEqu.setState(ApplyEquStateEnum.WAIT_APPROVAL.getCode());
         save(applyEqu);
+    }
+
+    public List<ApplyEqu> getApplyEquListByLabNumber(List<Long> labs) {
+        return lambdaQuery().in(ApplyEqu::getLabNumber, labs).list();
+    }
+
+    public void startApplyEqu(Long id) {
+        ApplyEqu one = lambdaQuery().eq(ApplyEqu::getId, id).one();
+        one.setState(ApplyEquStateEnum.APPROVED.getCode());
+        updateById(one);
+    }
+
+    public void finishedApplyEqu(FixedEquDto fixedEquDto) {
+        ApplyEqu one = lambdaQuery().eq(ApplyEqu::getId, fixedEquDto.getId()).one();
+        one.setState(ApplyEquStateEnum.REJECTED.getCode());
+        one.setFixedMessage(fixedEquDto.getFixedMessage());
+        updateById(one);
     }
 }

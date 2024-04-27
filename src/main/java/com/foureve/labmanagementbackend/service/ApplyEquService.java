@@ -1,6 +1,7 @@
 package com.foureve.labmanagementbackend.service;
 
 import com.foureve.labmanagementbackend.domain.dtos.ApplyEquDto;
+import com.foureve.labmanagementbackend.domain.dtos.FixedEquDto;
 import com.foureve.labmanagementbackend.domain.entity.ApplyEqu;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.foureve.labmanagementbackend.domain.entity.vo.ApplyEquVo;
@@ -19,4 +20,10 @@ public interface ApplyEquService {
     List<ApplyEquVo> getApplyEquList();
 
     void addApplyEquByTeacher(ApplyEquDto applyEquDto);
+
+    List<ApplyEquVo> getApplyEquListByLabMember();
+
+    void startApplyEqu(Long id);
+
+    void finishedApplyEqu(FixedEquDto fixedEquDto);
 }
