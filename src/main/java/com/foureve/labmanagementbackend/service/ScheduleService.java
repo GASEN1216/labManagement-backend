@@ -2,6 +2,9 @@ package com.foureve.labmanagementbackend.service;
 
 import com.foureve.labmanagementbackend.domain.entity.Schedule;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.foureve.labmanagementbackend.domain.vo.resp.ApiResult;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ScheduleService  {
 
+    List<Schedule> getSchedule(Long id);
 }

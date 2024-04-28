@@ -139,4 +139,10 @@ public class ApplyLabDao extends ServiceImpl<ApplyLabMapper, ApplyLab> {
         one.setState(ApplyLabStateEnum.USED_UP.getCode());
         updateById(one);
     }
+
+    public List<ApplyLab> getStuApplyLab() {
+        return lambdaQuery().eq(ApplyLab::getType, 0)
+                .eq(ApplyLab::getIsDelete, 0)
+                .list();
+    }
 }

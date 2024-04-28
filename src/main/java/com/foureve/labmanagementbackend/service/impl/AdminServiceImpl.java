@@ -3,10 +3,13 @@ package com.foureve.labmanagementbackend.service.impl;
 import com.foureve.labmanagementbackend.Holder.RequestHolder;
 import com.foureve.labmanagementbackend.cache.CourseCache;
 import com.foureve.labmanagementbackend.dao.*;
+import com.foureve.labmanagementbackend.domain.dtos.ApproveApplyLabDto;
 import com.foureve.labmanagementbackend.domain.dtos.SemesterDto;
 import com.foureve.labmanagementbackend.domain.dtos.UserDto;
 import com.foureve.labmanagementbackend.domain.entity.*;
+import com.foureve.labmanagementbackend.domain.entity.vo.ApplyLabVo;
 import com.foureve.labmanagementbackend.domain.entity.vo.UserVo;
+import com.foureve.labmanagementbackend.domain.enums.ApplyLabStateEnum;
 import com.foureve.labmanagementbackend.domain.enums.ErrorEnum;
 import com.foureve.labmanagementbackend.domain.enums.RoleEnum;
 import com.foureve.labmanagementbackend.domain.enums.SectionEnum;
@@ -16,15 +19,18 @@ import com.foureve.labmanagementbackend.service.AdminService;
 import com.foureve.labmanagementbackend.service.adapter.SemesterAdapter;
 import com.foureve.labmanagementbackend.service.adapter.UserAdapter;
 import com.foureve.labmanagementbackend.utils.AssertUtil;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -212,14 +218,14 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     @Transactional
-    public ApiResult assignSchedule(Integer applyLabId) {
+    public ApiResult assignSchedule(Long applyLabId) {
         ApplyLab applyLab = applyLabDao.getById(applyLabId);
         AssertUtil.isNotEmpty(applyLab, "没有找到对应的申请");
 
         int[][][][] courseCache = CourseCache.courseCache;
         int semesterId = applyLab.getSemesterId().intValue();
-        Integer beginWeeks = applyLab.getBeginWeeks()-1;
-        Integer endWeeks = applyLab.getEndWeeks()-1;
+        Integer beginWeeks = applyLab.getBeginWeeks() - 1;
+        Integer endWeeks = applyLab.getEndWeeks() - 1;
 
 
         Schedule schedule = new Schedule();
@@ -233,15 +239,15 @@ public class AdminServiceImpl implements AdminService {
         int section = 0;
 
 
+        int f = 0;
         for (int i = beginWeeks; i <= endWeeks; i++) {
-            int f = 0;
             for (int j = 0; j < 7; j++) {
                 for (int k = 0; k < 6; k++) {
                     if (courseCache[semesterId][i][j][k] == 0) {
-                        schedule.setWeeks(i+1);
-                        schedule.setWeek(j+1);
-                        schedule.setSection(SectionEnum.getSectionByCode(k+1));
-                        courseDao.save(Course.builder().semesterId((long) semesterId).weeks(i+1).week(j+1).section(SectionEnum.getSectionByCode(k+1)).build());
+                        schedule.setWeeks(i + 1);
+                        schedule.setWeek(j + 1);
+                        schedule.setSection(SectionEnum.getSectionByCode(k + 1));
+                        courseDao.save(Course.builder().semesterId((long) semesterId).weeks(i + 1).week(j + 1).section(SectionEnum.getSectionByCode(k + 1)).build());
                         courseCache[semesterId][i][j][k] = 1;
                         weeks = i;
                         week = j;
@@ -255,6 +261,10 @@ public class AdminServiceImpl implements AdminService {
             if (f == 1) break;
         }
 
+        if (f == 0) {
+            return ApiResult.fail(ErrorEnum.SYSTEM_ERROR.getCode(), "课表安排出现问题了，请稍后");
+        };
+
 
         List<Schedule> scheduleList = new ArrayList<>();
 
@@ -265,6 +275,8 @@ public class AdminServiceImpl implements AdminService {
         if (labList.size() == 1) {
             schedule.setLabNumber(labList.get(0).getNumber());
             scheduleDao.save(schedule);
+            applyLab.setState(ApplyLabStateEnum.SCHEDULED.getCode());
+            applyLabDao.updateById(applyLab);
             return ApiResult.success(schedule);
         }
         for (int i = 0; i < labList.size(); i++) {
@@ -274,9 +286,97 @@ public class AdminServiceImpl implements AdminService {
             scheduleList.add(s);
         }
         scheduleDao.saveBatch(scheduleList);
-        applyLab.setState(1);
+        applyLab.setState(ApplyLabStateEnum.SCHEDULED.getCode());
         applyLabDao.updateById(applyLab);
         return ApiResult.success(scheduleList);
+    }
+
+
+    @Override
+    @Transactional
+    public ApiResult assignStudentSchedule(ApproveApplyLabDto approveApplyLabDto) {
+        Long applyLabId = approveApplyLabDto.getId();
+        ApplyLab applyLab = applyLabDao.getById(applyLabId);
+        AssertUtil.isNotEmpty(applyLab, "没有找到对应的申请");
+
+        // 如果我不让通过
+        if (Objects.equals(approveApplyLabDto.getApprove(), ApplyLabStateEnum.REJECT.getCode())){
+            applyLab.setState(ApplyLabStateEnum.REJECT.getCode());
+            applyLabDao.updateById(applyLab);
+            return ApiResult.success();
+        }
+
+        int[][][][] courseCache = CourseCache.courseCache;
+        int semesterId = applyLab.getSemesterId().intValue();
+        Integer beginWeeks = applyLab.getBeginWeeks() - 1;
+        Integer endWeeks = applyLab.getEndWeeks() - 1;
+
+
+        Schedule schedule = new Schedule();
+        schedule.setName(applyLab.getScheduleName());
+        schedule.setSemesterId((long) semesterId);
+        schedule.setClasses(applyLab.getClasses());
+        schedule.setTeacherId(applyLab.getApplicantId());
+
+        int weeks = 0;
+        int week = 0;
+        int section = 0;
+
+
+        schedule.setSection(applyLab.getSection());
+
+        int f = 0;
+        for (int i = beginWeeks; i <= endWeeks; i++) {
+            for (int j = 0; j < 7; j++) {
+                int k = SectionEnum.getCodeBySection(applyLab.getSection()) - 1;
+                if (courseCache[semesterId][i][j][k] == 0) {
+                    schedule.setWeeks(i + 1);
+                    schedule.setWeek(j + 1);
+                    courseDao.save(Course.builder().semesterId((long) semesterId).weeks(i + 1).week(j + 1).section(applyLab.getSection()).build());
+                    courseCache[semesterId][i][j][k] = 1;
+                    weeks = i;
+                    week = j;
+                    section = k;
+                    f = 1;
+                    break;
+                }
+            }
+            if (f == 1) break;
+        }
+        // 如果课表已经没了呢
+        if (f == 0){
+            applyLab.setState(ApplyLabStateEnum.REJECT.getCode());
+            applyLabDao.updateById(applyLab);
+            AssertUtil.isTrue(false, "课表安排出现问题了，请稍后");
+        }
+
+        Lab lab = labDao.selectSuitableLabByLabApplyForStu(applyLab, weeks, week, section);
+        if (lab == null) {
+            // 状态改为驳回
+            applyLab.setState(ApplyLabStateEnum.REJECT.getCode());
+            applyLabDao.updateById(applyLab);
+        }
+
+        // 实验室存在，给学生分配课表
+        schedule.setLabNumber(lab.getNumber());
+        scheduleDao.save(schedule);
+        applyLab.setState(ApplyLabStateEnum.PASS.getCode());
+        applyLabDao.updateById(applyLab);
+        return ApiResult.success(schedule);
+
+    }
+
+
+    @Override
+    public ApiResult getStuApplyLab() {
+
+        List<ApplyLab> stuApplyLab = applyLabDao.getStuApplyLab();
+        List<ApplyLabVo> applyLabVos = stuApplyLab.stream().map(applyLab -> {
+            ApplyLabVo applyLabVo = new ApplyLabVo();
+            BeanUtils.copyProperties(applyLab, applyLabVo);
+            return applyLabVo;
+        }).collect(Collectors.toList());
+        return ApiResult.success(applyLabVos);
     }
 
 

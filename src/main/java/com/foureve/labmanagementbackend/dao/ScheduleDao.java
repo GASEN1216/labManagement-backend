@@ -23,4 +23,11 @@ public class ScheduleDao extends ServiceImpl<ScheduleMapper, Schedule> {
                 .eq(Schedule::getIsDelete, 0)
                 .list();
     }
+
+    public List<Schedule> getSchedule(Long id) {
+        return lambdaQuery().eq(Schedule::getSemesterId, id)
+                .eq(Schedule::getIsDelete, 0)
+                .orderByAsc(Schedule::getWeeks, Schedule::getWeek, Schedule::getSection)
+                .list();
+    }
 }

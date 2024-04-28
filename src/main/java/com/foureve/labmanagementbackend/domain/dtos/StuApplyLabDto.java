@@ -51,6 +51,7 @@ public class StuApplyLabDto {
         applyLab.setBeginWeeks(this.weeks);
         applyLab.setEndWeeks(this.week);
         applyLab.setSection(this.section);
+        applyLab.setScheduleName("学生申请");
         return applyLab;
     }
 }

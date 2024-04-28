@@ -123,6 +123,32 @@ public class LabDao extends ServiceImpl<LabMapper, Lab> {
 
     }
 
+    public Lab selectSuitableLabByLabApplyForStu(ApplyLab applyLab, int weeks, int week, int section) {
+
+        //已用
+        List<Long> UsedLabs = scheduleDao
+                .lambdaQuery()
+                .eq(Schedule::getSemesterId, applyLab.getSemesterId())
+                .eq(Schedule::getWeeks, weeks)
+                .eq(Schedule::getWeek, week)
+                .eq(Schedule::getSection, SectionEnum.getSectionByCode(section))
+                .list().stream().map(Schedule::getLabNumber).collect(Collectors.toList());
+
+
+        Long labNumber = applyLab.getLabNumber();
+        if (UsedLabs.contains(labNumber)){
+            return null;
+        }
+
+        // 实验室没有被占用
+        Lab suitableLab = lambdaQuery().eq(Lab::getNumber, labNumber)
+                .eq(Lab::getIsDelete, 0)
+                .one();
+        AssertUtil.isNotEmpty(suitableLab, "该实验室不存在");
+        return suitableLab;
+
+    }
+
     public List<Long> getLabNumberByLabMemberId(Long labmemberId) {
         return lambdaQuery().eq(Lab::getAdminId, labmemberId).list().stream().map(Lab::getNumber).collect(Collectors.toList());
     }

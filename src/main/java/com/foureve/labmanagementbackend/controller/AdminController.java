@@ -2,9 +2,11 @@ package com.foureve.labmanagementbackend.controller;
 
 import com.foureve.labmanagementbackend.Holder.RequestHolder;
 import com.foureve.labmanagementbackend.dao.UserDao;
+import com.foureve.labmanagementbackend.domain.dtos.ApproveApplyLabDto;
 import com.foureve.labmanagementbackend.domain.dtos.SemesterDto;
 import com.foureve.labmanagementbackend.domain.dtos.UserDto;
 import com.foureve.labmanagementbackend.domain.entity.User;
+import com.foureve.labmanagementbackend.domain.enums.ApplyLabStateEnum;
 import com.foureve.labmanagementbackend.domain.enums.ErrorEnum;
 import com.foureve.labmanagementbackend.domain.enums.RoleEnum;
 import com.foureve.labmanagementbackend.domain.vo.resp.ApiResult;
@@ -14,6 +16,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Objects;
 
 @RestController
@@ -234,13 +237,35 @@ public class AdminController {
      */
     @PostMapping("/assign_lab/{id}")
     @ApiOperation("将实验课安排到实验室")
-    public ApiResult assignSchedule(@PathVariable("id") Integer ApplyLabId) {
+    public ApiResult assignSchedule(@PathVariable("id") Long ApplyLabId) {
         ApiResult noneAuthorizer = getNoneAuthorizer();
         if (noneAuthorizer != null){
             return noneAuthorizer;
         }
         return adminService.assignSchedule(ApplyLabId);
     }
+
+    @PostMapping("/apply_lab_approve")
+    @ApiOperation("审批学生申请")
+    public ApiResult approveApplyLab(@RequestBody ApproveApplyLabDto approveApplyLabDto) {
+        ApiResult noneAuthorizer = getNoneAuthorizer();
+        if (noneAuthorizer != null){
+            return noneAuthorizer;
+        }
+        return adminService.assignStudentSchedule(approveApplyLabDto);
+    }
+
+    @GetMapping("/stu_apply_lab")
+    @ApiOperation("查看学生申请")
+    public ApiResult getStuApplyLab() {
+        ApiResult noneAuthorizer = getNoneAuthorizer();
+        if (noneAuthorizer != null){
+            return noneAuthorizer;
+        }
+        return adminService.getStuApplyLab();
+    }
+
+
 
 
 }
